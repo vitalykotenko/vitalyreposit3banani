@@ -1,61 +1,195 @@
-<div style="width: 100%; height: 100%; position: relative; background: #E0DFCC">
-    <div style="width: 563.12px; padding-bottom: 84.34px; padding-left: 34px; padding-right: 34px; left: 0px; top: 241.15px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-        <div style="align-self: stretch; height: 768px; background: #D5D3BE; box-shadow: 0px 1.4056603908538818px 2.8113207817077637px -1.4056603908538818px rgba(0, 0, 0, 0.10), 0px 1.4056603908538818px 4.216981410980225px rgba(0, 0, 0, 0.10); overflow: hidden; border-radius: 14px; outline: 1.41px #959485 solid; outline-offset: -1.41px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-            <div style="align-self: stretch; padding-top: 30px; padding-bottom: 33.74px; padding-left: 26px; padding-right: 14px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 2px; display: flex">
-                <div style="align-self: stretch; justify-content: space-between; align-items: flex-start; display: inline-flex">
-                    <div style="justify-content: center; display: flex; flex-direction: column; color: #171717; font-size: 30px; font-family: e-Ukraine; font-weight: 400; line-height: 44.98px; word-wrap: break-word">Резерв ID</div>
-                    <img style="width: 64px; height: 71px" src="https://placehold.co/64x71" />
-                </div>
-                <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 17px; display: flex">
-                    <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 5.62px; display: flex">
-                        <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                            <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #5E5E55; font-size: 21px; font-family: e-Ukraine; font-weight: 400; line-height: 28.11px; word-wrap: break-word">Дата народження:</div>
-                        </div>
-                        <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                            <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #171717; font-size: 24px; font-family: e-Ukraine; font-weight: 400; line-height: 39.36px; word-wrap: break-word">30.11.1998</div>
-                        </div>
-                    </div>
-                    <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 5.62px; display: flex">
-                        <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                            <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #5E5E55; font-size: 21px; font-family: e-Ukraine; font-weight: 400; line-height: 28.11px; word-wrap: break-word">Відстрочка до:</div>
-                        </div>
-                        <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                            <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #171717; font-size: 24px; font-family: e-Ukraine; font-weight: 400; line-height: 39.36px; word-wrap: break-word">21.11.2026</div>
-                        </div>
-                    </div>
-                </div>
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Резерв+</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap&subset=cyrillic,cyrillic-ext,latin" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<style>
+  :root {
+    --app-bg:#e0dfcc;
+    --card-surface:#d5d3be;
+    --card-border:#959485;
+    --marquee:#6b4b1a;
+    --orange:#fd890a;
+    --muted-ink:#5e5e55;
+    --ink:#171717;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    font-family:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+    background:var(--app-bg);
+    color:var(--ink);
+    min-height:100vh;
+    display:flex;justify-content:center;
+  }
+  .app{width:100%;max-width:430px;min-height:100vh;display:flex;flex-direction:column;}
+  header{display:flex;justify-content:flex-end;padding:48px 20px 16px;}
+  .pill{
+    display:inline-flex;align-items:center;gap:8px;
+    background:#fff;border:none;border-radius:9999px;
+    padding:12px 20px;font:500 15px "Manrope",sans-serif;
+    box-shadow:0 1px 3px rgba(0,0,0,.06);cursor:pointer;
+  }
+  .pill svg{width:16px;height:16px;}
+  main{flex:1;padding:0 20px 16px;}
+
+  .scene{perspective:1400px;min-height:70vh;width:100%;}
+  .card-flip{
+    position:relative;width:100%;min-height:70vh;
+    transform-style:preserve-3d;
+    transition:transform 700ms cubic-bezier(.22,1,.36,1);
+    cursor:pointer;background:transparent;border:0;padding:0;text-align:left;
+  }
+  .card-flip.flipped{transform:rotateY(180deg);}
+  .face{
+    position:absolute;inset:0;
+    display:flex;flex-direction:column;overflow:hidden;
+    border-radius:14px;
+    background:var(--card-surface);
+    border:1.4px solid var(--card-border);
+    box-shadow:0 1.4px 4.2px rgba(0,0,0,.1),0 1.4px 2.8px -1.4px rgba(0,0,0,.1);
+    backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  }
+  .face.back{transform:rotateY(180deg);align-items:center;justify-content:center;padding:40px 24px;}
+
+  .top{padding:30px 26px 34px;}
+  .top-row{display:flex;justify-content:space-between;align-items:flex-start;}
+  h1{font-size:30px;line-height:1.5;font-weight:400;color:var(--ink);}
+  .trident{width:44px;height:44px;}
+  .field{margin-top:16px;}
+  .field-label{font-size:21px;line-height:1.34;color:var(--muted-ink);}
+  .field-value{font-size:24px;line-height:1.64;color:var(--ink);}
+
+  .spacer{flex:1;}
+
+  .marquee{
+    overflow:hidden;white-space:nowrap;
+    background:var(--marquee);color:#fff;height:35px;padding:3px 0;
+  }
+  .marquee-track{
+    display:inline-block;padding-left:100%;
+    font-size:20px;line-height:28px;letter-spacing:.3px;
+    animation:marquee 18s linear infinite;
+  }
+  @keyframes marquee{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
+  .bottom{padding:55px 26px 18px;}
+  .bottom-row{margin-top:8px;display:flex;align-items:flex-end;justify-content:space-between;}
+  h2{font-size:31px;line-height:1.13;font-weight:400;color:var(--ink);}
+  .plus{
+    width:61px;height:61px;border-radius:9999px;
+    background:var(--orange);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 1.3px 3.8px rgba(0,0,0,.1),0 1.3px 2.5px -1.3px rgba(0,0,0,.1);
+    font-size:44px;font-weight:700;color:#23221e;line-height:1;
+  }
+
+  .qr-title{font-size:17px;font-weight:600;margin-bottom:24px;text-align:center;}
+  .qr-box{background:#fff;padding:16px;border-radius:12px;}
+  #qrcanvas{display:block;width:260px;height:260px;}
+  .qr-hint{margin-top:32px;font-size:15px;color:var(--muted-ink);}
+
+  nav{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:12px 8px 24px;}
+  .tab{display:flex;flex-direction:column;align-items:center;gap:4px;color:#000;text-decoration:none;font-size:13px;font-weight:500;}
+  .tab.active{font-weight:700;}
+  .tab svg{width:24px;height:24px;stroke:#000;fill:none;stroke-width:2;}
+  .tab.active svg{stroke-width:2.5;}
+</style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <button class="pill" type="button">
+        Сповіщення
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      </button>
+    </header>
+
+    <main>
+      <div class="scene">
+        <button class="card-flip" id="card" type="button" aria-label="Перевернути картку">
+          <!-- Front -->
+          <div class="face front">
+            <div class="top">
+              <div class="top-row">
+                <h1>Резерв ID</h1>
+                <svg class="trident" viewBox="0 0 64 64" fill="#171717" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M30 4h4v56h-4z"/>
+                  <path d="M14 12c0 14 4 22 14 26v-8c-6-3-8-9-8-18h-6z"/>
+                  <path d="M50 12c0 14-4 22-14 26v-8c6-3 8-9 8-18h6z"/>
+                  <path d="M22 56h20v4H22z"/>
+                </svg>
+              </div>
+              <div class="field">
+                <p class="field-label">Дата народження:</p>
+                <p class="field-value">30.11.1998</p>
+              </div>
+              <div class="field">
+                <p class="field-label">Відстрочка до:</p>
+                <p class="field-value">21.11.2026</p>
+              </div>
             </div>
-            <div style="align-self: stretch; flex: 1 1 0"></div>
-            <div style="align-self: stretch; height: 35px; position: relative; background: #6B4B1A; overflow: hidden">
-                <div style="left: 16.59px; top: 3.97px; position: absolute; flex-direction: column; justify-content: center; align-items: center; display: inline-flex">
-                    <div style="width: 528px; height: 27px; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 20px; font-family: e-Ukraine; font-weight: 400; line-height: 28.11px; letter-spacing: 0.30px; word-wrap: break-word">Документ оновлено о 15:25 | 06.05.2026 •</div>
-                </div>
+
+            <div class="spacer"></div>
+
+            <div class="marquee">
+              <div class="marquee-track">Документ оновлено о 15:25 | 06.05.2026 • Документ оновлено о 15:25 | 06.05.2026 •&nbsp;</div>
             </div>
-            <div style="align-self: stretch; padding-top: 55px; padding-bottom: 18px; padding-left: 26px; padding-right: 23px; background: #D5D3BE; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 11.25px; display: flex">
-                <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                    <div style="align-self: stretch; justify-content: center; display: flex; flex-direction: column; color: #5E5E55; font-size: 21px; font-family: e-Ukraine; font-weight: 400; line-height: 28.11px; word-wrap: break-word">Військовозобов'язаний</div>
-                </div>
-                <div style="align-self: stretch; justify-content: space-between; align-items: flex-end; display: inline-flex">
-                    <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                        <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                            <div style="justify-content: center; display: flex; flex-direction: column; color: #171717; font-size: 31px; font-family: e-Ukraine; font-weight: 400; line-height: 35.14px; word-wrap: break-word">BITT</div>
-                        </div>
-                        <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                            <div style="justify-content: center; display: flex; flex-direction: column; color: #171717; font-size: 31px; font-family: e-Ukraine; font-weight: 400; line-height: 35.14px; word-wrap: break-word">ПАВЛО</div>
-                        </div>
-                        <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                            <div style="justify-content: center; display: flex; flex-direction: column; color: #171717; font-size: 31px; font-family: e-Ukraine; font-weight: 400; line-height: 35.14px; word-wrap: break-word">ПАВЛОВИЧ</div>
-                        </div>
-                    </div>
-                    <div style="width: 61.24px; height: 61.24px; padding: 15.31px; position: relative; background: #FD890A; border-radius: 42806812px; justify-content: center; align-items: center; display: flex">
-                        <div style="width: 61.24px; height: 61.24px; left: -0.48px; top: 0px; position: absolute; background: rgba(255, 255, 255, 0); box-shadow: 0px 1.2757434844970703px 2.5514869689941406px -1.2757434844970703px rgba(0, 0, 0, 0.10), 0px 1.2757434844970703px 3.827230215072632px rgba(0, 0, 0, 0.10); border-radius: 42806812px"></div>
-                        <div style="justify-content: center; display: flex; flex-direction: column; color: #23221E; font-size: 51px; font-family: e-Ukraine; font-weight: 700; line-height: 35.14px; word-wrap: break-word">+</div>
-                    </div>
-                </div>
+
+            <div class="bottom">
+              <p class="field-label">Військовозобов'язаний</p>
+              <div class="bottom-row">
+                <h2>ВІТТ<br>ПАВЛО<br>ПАВЛОВИЧ</h2>
+                <span class="plus" aria-hidden="true">+</span>
+              </div>
             </div>
-        </div>
-    </div>
-    <div style="width: 563px; height: 124px; left: 0px; top: 1094px; position: absolute; background: #FBFCFC"></div>
-    <img style="width: 563px; height: 84px; left: 0px; top: 1099px; position: absolute" src="https://placehold.co/563x84" />
-    <img style="width: 256px; height: 72px; left: 307px; top: 100px; position: absolute" src="https://placehold.co/256x72" />
-</div>
+          </div>
+
+          <!-- Back -->
+          <div class="face back">
+            <p class="qr-title">QR-код дійсний до 4 березня 2027</p>
+            <div class="qr-box">
+              <canvas id="qrcanvas"></canvas>
+            </div>
+            <p class="qr-hint">Натисніть, щоб повернутися</p>
+          </div>
+        </button>
+      </div>
+    </main>
+
+    <nav>
+      <a class="tab active" href="#">
+        <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 10h4M7 14h6"/></svg>
+        Резерв ID
+      </a>
+      <a class="tab" href="#">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Сервіси
+      </a>
+      <a class="tab" href="#">
+        <svg viewBox="0 0 24 24"><path d="M12 2 2 12l10 10 10-10z"/></svg>
+        Вакансії
+      </a>
+      <a class="tab" href="#">
+        <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        Меню
+      </a>
+    </nav>
+  </div>
+
+<script>
+  const card = document.getElementById('card');
+  card.addEventListener('click', () => card.classList.toggle('flipped'));
+
+  QRCode.toCanvas(document.getElementById('qrcanvas'),
+    'https://reserveplus.gov.ua/id/27061998',
+    { width: 260, margin: 0, errorCorrectionLevel: 'H' });
+</script>
+</body>
+</html>
